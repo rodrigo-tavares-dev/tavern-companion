@@ -1,6 +1,5 @@
 package com.taverncompanion.app.ui
 
-import android.widget.Space
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -52,7 +51,7 @@ import com.taverncompanion.app.viewmodel.CombatViewModel
  */
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
-fun DiceRollScreen(
+fun DiceRollerScreen(
     viewModel: CombatViewModel,
     onNavigateBack: () -> Unit
 ) {
@@ -150,7 +149,7 @@ fun DiceRollScreen(
                        }
                        is RollResult.StandardSuccess -> {
                            Text(
-                               text = result.vallue.toString(),
+                               text = result.value.toString(),
                                fontSize = 64.sp,
                                fontWeight = FontWeight.ExtraBold,
                                color = Color.White
