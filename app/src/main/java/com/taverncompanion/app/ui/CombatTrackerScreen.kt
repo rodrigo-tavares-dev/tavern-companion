@@ -52,15 +52,22 @@ import androidx.compose.ui.unit.dp
 import com.taverncompanion.app.model.Combatant
 import com.taverncompanion.app.viewmodel.CombatViewModel
 
+/**
+ * Tela principal da aplicação para monitorar os combates.
+ *
+ * *param viewModel contém o estado da batalha.
+ * @param onNavigateToDice Navega para a tela de dados.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CombatTrackerScreen(
     viewModel: CombatViewModel,
     onNavigateToDice: () -> Unit
 ) {
-
+    //Coleta a lista de combates do ViewModel como um estado.
     val combatants by viewModel.combatants.collectAsState()
 
+    //Armazena o estado do diálogo de adição de combate.
     var showAddDialog by remember { mutableStateOf(false) }
 
     Scaffold(
@@ -69,14 +76,14 @@ fun CombatTrackerScreen(
         TopAppBar(
             title = { Text("Tracker de Combate") },
             actions = {
-
+                //Botão para limpar a lista de combates.
                 IconButton(onClick = { viewModel.clearAll() }) {
                     Icon(
                         imageVector = Icons.Default.DeleteSweep,
                         contentDescription = "Limpar combate"
                     )
                 }
-
+                //Botão para navegar para a mesa de rolagem de dados.
                 IconButton(onClick = onNavigateToDice) {
                     Icon(
                         imageVector = Icons.Default.Casino,
@@ -86,8 +93,8 @@ fun CombatTrackerScreen(
             }
         )
     },
-    floatingActionButton =
-    {
+    floatingActionButton = {
+        //Botão flutuante para adicionar um novo participante.
         FloatingActionButton(onClick = { showAddDialog = true }) {
             Icon(
                 imageVector = Icons.Default.Add,
@@ -98,6 +105,7 @@ fun CombatTrackerScreen(
     )
     {
         innerPadding ->
+        //Exibe a lista de combates ou uma mensagem se não houver nenhum.
         if (combatants.isEmpty()) {
             Column(
                 modifier = Modifier
@@ -118,6 +126,7 @@ fun CombatTrackerScreen(
                 )
             }
         } else {
+            //Exibe a lista de combates se houver algum.
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
@@ -127,7 +136,7 @@ fun CombatTrackerScreen(
             ) {
                 items(
                     items = combatants,
-                    key = { it.id }
+                    key = { it.id } //Chave única para preservar o estado de cada item.
                 ) { combatant ->
                     CombatantCard(
                         combatant = combatant,
@@ -138,6 +147,8 @@ fun CombatTrackerScreen(
                 }
             }
         }
+
+        //Redenriza o diálogo de adição de combate se necessário.
         if (showAddDialog) {
             AddCombatantDialog(
                 onDismiss = { showAddDialog = false },
@@ -150,6 +161,14 @@ fun CombatTrackerScreen(
     }
 }
 
+/**
+ * Representa um card de combate com detalhes do personagem.
+ *
+ * @param combatant Dados do personagem.
+ * @param onDamage Função para aplicar dano ao personagem.
+ * @param onHeal Função para aplicar cura ao personagem.
+ * @param onDelete Função para remover o personagem do combate.
+ */
 @Composable
 private fun CombatantCard(
     combatant: Combatant,
@@ -157,6 +176,7 @@ private fun CombatantCard(
     onHeal: () -> Unit,
     onDelete: () -> Unit
 ) {
+    //Aplica a distinção: jogador (azul) ou NPC (vermelho).
     val borderColor = if (combatant.isPlayer) Color(0xFF2196F3) else Color(0xFFE53935)
     val hpTextColor = if (combatant.isFainted()) Color.Gray else MaterialTheme.colorScheme.onSurface
 
@@ -164,6 +184,7 @@ private fun CombatantCard(
         modifier = Modifier.fillMaxWidth(),
         border = BorderStroke(2.dp, borderColor),
         colors = CardDefaults.cardColors(
+            //Define a cor de fundo com base na vida do personagem.
             containerColor = if (combatant.isFainted()) Color(0x1F000000) else MaterialTheme.colorScheme.surface
         )
     ) {
@@ -174,6 +195,7 @@ private fun CombatantCard(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
+            //Coluna contendo detalhes do personagem.
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = combatant.name,
@@ -194,17 +216,21 @@ private fun CombatantCard(
                 )
             }
 
+            //Botões para aplicar dano, cura e remover o personagem.
             Row(verticalAlignment = Alignment.CenterVertically) {
+                //Aplica 1 ponto de dano
                 IconButton(onClick = onDamage) {
                     Icon(imageVector = Icons.Default.Remove, contentDescription = "Aplicar dano")
                 }
 
+                //Aplica 1 ponto de cura
                 IconButton(onClick = onHeal) {
                     Icon(imageVector = Icons.Default.Add, contentDescription = "Aplicar cura")
                 }
 
                 Spacer(modifier = Modifier.width(8.dp))
 
+                //Exclui o combatente
                 IconButton(onClick = onDelete) {
                     Icon(
                         imageVector = Icons.Default.Delete,
@@ -217,11 +243,18 @@ private fun CombatantCard(
     }
 }
 
+/**
+ * Caixa de diálogo suspensa com formulário para adicionar um nova criatura/aliado.
+ *
+ * @param onDismiss Função para fechar o diálogo.
+ * @param onConfirm Função para adicionar o novo combatente.
+ */
 @Composable
 private fun AddCombatantDialog(
     onDismiss: () -> Unit,
     onConfirm: (name: String, maxHp: Int, initiative: Int, isPlayer: Boolean) -> Unit
 ) {
+    //Estados locais para armazenar os dados do novo combatente.
     var name by remember { mutableStateOf("") }
     var maxHpText by remember { mutableStateOf("") }
     var initiativeText by remember { mutableStateOf("") }
@@ -271,6 +304,7 @@ private fun AddCombatantDialog(
         confirmButton = {
             TextButton(
                 onClick = {
+                    //Converte os valores de HP e iniciativa para inteiros.
                     val hp = maxHpText.toIntOrNull() ?: 10
                     val init = initiativeText.toIntOrNull() ?: 10
                     if (name.isNotBlank()) {
