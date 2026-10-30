@@ -123,5 +123,4 @@ class CombatViewModel(
             repository.clearAllCombatants()
         }
     }
-    }
 }
