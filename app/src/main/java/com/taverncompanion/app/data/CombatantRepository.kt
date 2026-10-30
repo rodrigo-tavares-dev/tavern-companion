@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
  *
  * @property combatantDao Objeto de acesso aos dados do personagem.
  */
-class CombatRepository(
+class CombatantRepository(
     private val combatantDao: CombatantDao
 ) {
 

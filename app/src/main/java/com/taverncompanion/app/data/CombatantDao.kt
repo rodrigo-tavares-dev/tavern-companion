@@ -29,7 +29,7 @@ interface CombatantDao {
      *
      * A palavra suspend permite que a função seja executada via Coroutines.
      */
-    @Insert(onConflict = onConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertCombatant(combatant: Combatant): Long
 
     /**

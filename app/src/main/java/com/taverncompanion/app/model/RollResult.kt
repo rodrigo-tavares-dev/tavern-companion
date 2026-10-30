@@ -19,7 +19,7 @@ sealed class RollResult {
      * @property dice O tipo de dado usado na rolagem.
      */
     data class StandardSuccess(
-        val vallue: Int,
+        val value: Int,
         val dice: DiceType
     ) : RollResult()
 
@@ -28,7 +28,7 @@ sealed class RollResult {
      */
 
     data class CriticalSuccess(
-        val vallue: Int = 20,
+        val value: Int = 20,
         val dice: DiceType = DiceType.D20
     ) : RollResult()
 
@@ -37,7 +37,7 @@ sealed class RollResult {
      */
 
     data class CriticalFailure(
-        val vallue: Int = 1,
+        val value: Int = 1,
         val dice: DiceType = DiceType.D20
-    )
+    ) : RollResult()
 }

@@ -2,7 +2,7 @@ package com.taverncompanion.app.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.taverncompanion.app.data.CombatRepository
+import com.taverncompanion.app.data.CombatantRepository
 import com.taverncompanion.app.model.Combatant
 import com.taverncompanion.app.model.DiceType
 import com.taverncompanion.app.model.RollResult
@@ -20,7 +20,7 @@ import kotlinx.coroutines.launch
  *@property repository Repositório responsável por acessar os dados do personagem.
  */
 class CombatViewModel(
-    private val repository: CombatRepository
+    private val repository: CombatantRepository
 ) : ViewModel() {
 
     /**
