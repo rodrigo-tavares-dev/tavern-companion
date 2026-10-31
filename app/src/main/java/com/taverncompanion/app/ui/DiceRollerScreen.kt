@@ -1,5 +1,6 @@
 package com.taverncompanion.app.ui
 
+import android.media.MediaPlayer
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -39,6 +40,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.taverncompanion.app.R
 import com.taverncompanion.app.model.DiceType
 import com.taverncompanion.app.model.RollResult
 import com.taverncompanion.app.sensor.ShakeDetector
@@ -61,6 +63,20 @@ fun DiceRollerScreen(
     //Observa reativamente o estado do dado selecionado e do resultado da última rolagem.
     val selectDice by viewModel.selectedDice.collectAsState()
     val rollResult by viewModel.lastRollResult.collectAsState()
+
+    //Função para tocar o som do dado.
+    fun playRollSound() {
+        try {
+            val mediaPlayer = MediaPlayer.create(context, R.raw.dice_roll)
+            mediaPlayer?.setOnCompletionListener { mp ->
+                //Libera o recurso de mídia quando a reprodução é concluída.
+                mp.release()
+            }
+            mediaPlayer?.start()
+        } catch (_: Exception) {
+            //Caso ocorra algum erro durante a reprodução do som, a exceção é ignorada.
+        }
+    }
 
     //Instaciação memorizada do detector de shake.
     val shakeDetector = remember {
